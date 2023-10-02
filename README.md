@@ -5,8 +5,9 @@ This Python script showcases how to interact with OpenAI's GPT-3.5 Turbo model c
 For more details how to install llama.cpp : https://github.com/ggerganov/llama.cpp
 
 ```text
-Orhan Cavus
-02.10.2023
+Application : local_llama_cpp_openai
+Author      : Orhan Cavus
+Created     : 02.10.2023
 ```
 
 ## OPENAI api format
