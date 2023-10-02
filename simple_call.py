@@ -1,5 +1,4 @@
 import requests
-import json
 
 LLM_URL = "http://127.0.0.1:8081/v1/chat/completions"
 
@@ -15,16 +14,15 @@ def sample_usage(prompt):
     }
 
     response = requests.post(url, headers=headers, json=data)
+    result_json = response.json()
 
-    result = response.json()
-
-    return result
+    return result_json["choices"][0]["message"]["content"]
 
 
 if __name__ == "__main__":
     prompt = "Say this is a test!"
-    result_json = sample_usage(prompt)
+    completion = sample_usage(prompt)
 
-    print("\n\nSample Local LLM with Open ai format usage..\n\n")
-    print(f"Prompt : {prompt} ")
-    print(result_json["choices"][0]["message"]["content"])
+    print("\nSample Local LLM with OpenAI format usage:\n")
+    print(f"Prompt: {prompt}")
+    print(completion)
