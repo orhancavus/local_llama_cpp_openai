@@ -1,7 +1,6 @@
 # Run local LLM as OPENAI API through llama.cpp
 This Python script showcases how to interact with OpenAI's GPT-3.5 Turbo model compatible Local LLM running with llama.cpp to generate text completions. It sends a user-provided prompt to a locally hosted instance of the model and retrieves the generated text. This readme explains how to use the script and provides some context.
 
-
 For more details how to install llama.cpp : https://github.com/ggerganov/llama.cpp
 
 ```text
