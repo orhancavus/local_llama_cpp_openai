@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import Mock, patch
+import requests
 import simple_call  # Import the script you want to test
 
 
@@ -18,6 +19,26 @@ def test_sample_usage(mock_post):
 
     # Assertions
     assert completion == "Generated completion"
+
+
+@patch("simple_call.requests.post")
+def test_sample_usage_connection_error(mock_post):
+    # Simulate a connection error
+    mock_post.side_effect = requests.exceptions.ConnectionError
+
+    # Call the function with a sample prompt and handle the exception
+    try:
+        completion = simple_call.sample_usage("This is a test prompt")
+    except requests.exceptions.ConnectionError:
+        completion = (
+            "An error occurred, for connection errors run <python api_like_OAI.py>:"
+        )
+
+    # Assertions
+    assert (
+        completion
+        == "An error occurred, for connection errors run <python api_like_OAI.py>:"
+    )
 
 
 if __name__ == "__main__":

@@ -13,10 +13,13 @@ def sample_usage(prompt):
         "temperature": 0.7,
     }
 
-    response = requests.post(url, headers=headers, json=data)
-    result_json = response.json()
-
-    return result_json["choices"][0]["message"]["content"]
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+        result_json = response.json()
+        return result_json["choices"][0]["message"]["content"]
+    except requests.exceptions.RequestException as e:
+        return f"An error occurred, for connection errors run <python api_like_OAI.py>:"
 
 
 if __name__ == "__main__":
