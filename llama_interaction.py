@@ -1,6 +1,29 @@
 import requests
 import json
 
+"""
+This module provides functions to interact with a local LLM (Language Model) server.
+
+Functions:
+    call_url_with_headers_and_data(url, headers, data):
+        Sends an HTTP POST request to the specified URL with the given headers and JSON data.
+        Returns the JSON response if the request is successful, otherwise returns an error message.
+
+    sample_usage():
+        Demonstrates a sample usage of the call_url_with_headers_and_data function by sending a predefined prompt to the LLM server.
+
+    get_result_content(prompt):
+        Sends a prompt to the LLM server and returns the generated content.
+        Configures various parameters for the LLM request such as temperature, stop sequence, top_k, n_keep, and top_p.
+
+    interact_with_llama():
+        Starts an interactive session with the LLM server, allowing the user to input prompts and receive responses until "QUIT" is entered.
+
+Usage:
+    Run this script directly to start an interactive session with the LLM server.
+    Prior to running this script, ensure that the LLM server is running and accessible at the specified URL.
+   ./server -c 4096 --host 0.0.0.0 -t 16 --mlock -m ../TheBloke/Mistral-7B-Instruct-v0.1-GGUF/mistral-7b-instruct-v0.1.Q4_K_S.gguf    
+"""
 
 LLM_URL = "http://localhost:8080/completion"
 

@@ -10,7 +10,7 @@ Author      : Orhan Cavus
 Created     : 02.10.2023
 ```
 
-## OPENAI api format
+## Call with OPENAI api format
 
 ```bash
 curl https://api.openai.com/v1/chat/completions \
@@ -25,7 +25,7 @@ curl https://api.openai.com/v1/chat/completions \
 
 ### 1. Start local LLM and API server separetely
 
-### 2. Start Local LLM server llama.cpp folder
+### 2. Start Local LLM server from the llama.cpp folder with appropriate model
 
 ```bash
 # Start local llama.cpp from llama.cpp main folder
@@ -67,5 +67,18 @@ curl http://127.0.0.1:8081/v1/chat/completions \
      "messages": [{"role": "user", "content": "Say this is a test!"}],
      "temperature": 0.7
    }' 
+```
 
+or with llama_api_client.py
+
+```bash
+python llama_api_client.py "Explain prime numbers"
+```
+
+### 6. Test modules
+
+You can run the tests using the following command from the root of your project:
+
+```bash
+pytest test/
 ```

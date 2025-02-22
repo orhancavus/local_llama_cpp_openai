@@ -1,4 +1,26 @@
 import requests
+
+"""
+This module provides functions to interact with a local LLaMA model via HTTP requests.
+
+Functions:
+    call_url_with_headers_and_data(url, headers, data):
+        Sends an HTTP POST request to the specified URL with the given headers and JSON data.
+        Returns the JSON response if the request is successful, otherwise returns an error message.
+
+    get_result_content(prompt):
+        Prepares the data payload and calls the LLaMA model endpoint to get a response for the given prompt.
+        Returns the content of the response message.
+
+    interact_with_llama():
+        Initiates an interactive session with the LLaMA model, allowing the user to input prompts and receive responses.
+        The session continues until the user inputs 'QUIT'.
+
+Usage:
+    Run this script directly to start an interactive session with the LLaMA model.
+    Prior to running this script, ensure that the LLaMA model server is running and accessible at the specified URL.
+    python api_like_OAI.py
+"""
 import json
 
 LLM_URL = "http://127.0.0.1:8081/v1/chat/completions"
