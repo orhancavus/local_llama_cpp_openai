@@ -32,16 +32,15 @@ def call_url_with_headers_and_data(url, headers, data):
         response = requests.post(url, headers=headers, json=data)
 
         # Check the response status code
-        if response.status_code == 200:
-            # Return the JSON response
-            return response.json()
-        else:
-            return f"HTTP Request Failed with Status Code: {response.status_code}"
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+
+        # Return the JSON response
+        return response.json()
 
     except requests.exceptions.RequestException as e:
-        return f"An error occurred: {e}"
+        raise RuntimeError(f"An error occurred calling the URL: {url}") from e
     except json.JSONDecodeError as e:
-        return f"Error decoding JSON response: {str(e)}"
+        raise ValueError(f"Error decoding JSON response: {str(e)}") from e
 
 
 def get_result_content(prompt):
@@ -51,7 +50,7 @@ def get_result_content(prompt):
     # TODO disable """### Human and ### Assistant """ expressions
     data = {
         "model": "gpt-3.5-turbo",
-        "messages": [{"role": "user", "content": "Say this is a test!"}],
+        "messages": [{"role": "user", "content": prompt}],
         "n_predict": 512,
         "temperature": 0.2,
         "top_k": 40,
@@ -59,27 +58,33 @@ def get_result_content(prompt):
         "top_p": 0.9,
     }
     # Call the function and store the result
-    result = call_url_with_headers_and_data(url, headers, data)
-
-    # Print the result
-    # print(result)
-
-    return result["choices"][0]["message"]["content"]
+    try:
+        result = call_url_with_headers_and_data(url, headers, data)
+        return result["choices"][0]["message"]["content"]
+    except RuntimeError as e:
+        return f"Connection error receiving LLM response : {e}"
+    except json.JSONDecodeError as e:
+        return f"Error decoding JSON response: {str(e)}"
 
 
 def interact_with_llama():
-    # Start and continue interaction with llma untin QUIT is entered
-    continue_interacion = True
+    # Start and continue interaction with llma until QUIT is entered
+    continue_interaction = True
     print("Start conversation ..\n\n")
-    while continue_interacion:
+    while continue_interaction:
         prompt = input("Prompt:")
         if prompt == "QUIT":
-            continue_interacion = False
+            continue_interaction = False
             break
         print(f">Prompt   : {prompt}")
         print(f">Response : ", end="")
-        content = get_result_content(prompt)
-        print(f"{content}")
+        try:
+            content = get_result_content(prompt)
+            print(f"{content}")
+        except requests.exceptions.RequestException as e:
+            print(f"Connection error occured")
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON response: {str(e)}")
     print("End conversation ..\n\n")
 
 

@@ -34,16 +34,15 @@ def call_url_with_headers_and_data(url, headers, data):
         response = requests.post(url, headers=headers, json=data)
 
         # Check the response status code
-        if response.status_code == 200:
-            # Return the JSON response
-            return response.json()
-        else:
-            return f"HTTP Request Failed with Status Code: {response.status_code}"
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+
+        # Return the JSON response
+        return response.json()
 
     except requests.exceptions.RequestException as e:
-        return f"An error occurred: {e}"
+        raise RuntimeError(f"An error occurred calling the URL: {url}") from e
     except json.JSONDecodeError as e:
-        return f"Error decoding JSON response: {str(e)}"
+        raise ValueError(f"Error decoding JSON response: {str(e)}") from e
 
 
 def sample_usage():
@@ -59,8 +58,6 @@ def sample_usage():
     result = call_url_with_headers_and_data(url, headers, data)
 
     # Print the result
-    # print(result)
-
     print(result["content"])
 
 
@@ -78,23 +75,24 @@ def get_result_content(prompt):
         "n_keep": 30,
         "top_p": 0.9,
     }
-    # Call the function and store the result
-    result = call_url_with_headers_and_data(url, headers, data)
-
-    # Print the result
-    # print(result)
-
-    return result["content"]
+    try:
+        # Call the function and store the result
+        result = call_url_with_headers_and_data(url, headers, data)
+        return result["content"]
+    except RuntimeError as e:
+        return f"Connection error receiving LLM response : {e}"
+    except ValueError as e:
+        return f"Error decoding JSON response: {str(e)}"
 
 
 def interact_with_llama():
-    # Start and continue interaction with llma untin QUIT is entered
-    continue_interacion = True
+    # Start and continue interaction with llma until QUIT is entered
+    continue_interaction = True
     print("Start conversation ..\n\n")
-    while continue_interacion:
+    while continue_interaction:
         prompt = input("Prompt:")
         if prompt == "QUIT":
-            continue_interacion = False
+            continue_interaction = False
             break
         print(f">Prompt   : {prompt}")
         print(f">Response : ", end="")
@@ -104,7 +102,4 @@ def interact_with_llama():
 
 
 if __name__ == "__main__":
-    # content = get_result_content("How are you?")
-    # print(f"Response :{content}")
-    # write a script to call url with the specified hedear and data with the requests Python module
     interact_with_llama()
